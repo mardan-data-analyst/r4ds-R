@@ -1,0 +1,108 @@
+---
+title: "Chapter 7 - Workflow: scripts and projects"
+author: "Mardan Mirzaguliyev"
+format: html
+editor: visual
+date: 10/14/2023
+---
+
+# Chapter 7 - Workflow: scripts and projects
+
+## Scripts
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class))
+```
+
+### **Running code**
+
+```{r}
+not_cancelled <- flights |> 
+  filter(!is.na(dep_delay), 
+         !is.na(arr_delay))
+
+not_cancelled |> 
+  group_by(year, month, day) |> 
+  summarize(mean = mean(dep_delay),
+            .groups = "keep")
+```
+
+### **RStudio diagnostics**
+
+```{r}
+# RStudio will highlight syntax errors with a red squiggly line and a cross in the sidebar
+# Hover over the cross to see what the problem is
+
+# x y <- 
+```
+
+```{r}
+# RStudio will also let you know about potential problems
+
+# 3 == NA
+```
+
+### **Saving and naming**
+
+1.  File names should be machine readable: avoid spaces, symbols, and special characters. Don't rely on case sensitivity to distinguish files.
+
+2.  File names should be human readable: use file names to describe what's in the file.
+
+3.  File names should play well with default ordering: start file names with numbers so that alphabetical sorting puts them in the order they get used.
+
+## Projects
+
+To real life situations, you need to make two decisions:
+
+1.  What is the source of truth? What will you save as your lasting record of what happened?
+
+2.  Where does your analysis live?
+
+    ### **What is the source of truth?**
+
+There is a great pair of keyboard shortcuts that will work together to make sure you've captured the important parts of your code in the editor:
+
+1.  Press Cmd/Ctrl + Shift + 0/F10 to restart R.
+
+2.  Press Cmd/Ctrl + Shift + S to re-run the current script.
+
+### **Where does your analysis live?**
+
+```{r}
+getwd()
+```
+
+```{r}
+# setwd("/path/to/my/CoolProject")
+```
+
+### **RStudio projects**
+
+```{r}
+ggplot(diamonds, aes(x = carat,
+                     y = price)) +
+  geom_hex()
+
+ggsave("output/diamonds.png")
+```
+
+```{r}
+write_csv(diamonds, "data/diamonds.csv")
+```
+
+### Exercises
+
+```{r}
+# 1
+# Python in RStudio
+```
+
+```{r}
+# 2
+```

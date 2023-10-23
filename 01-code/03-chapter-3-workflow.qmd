@@ -1,0 +1,140 @@
+---
+title: "Chapter - 3 Workflow Basics"
+author: "Mardan Mirzaguliyev"
+format: html
+editor: visual
+date: 10/05/2023
+---
+
+# Workflow basics
+
+## **Coding basics**
+
+```{r}
+1 / 200 * 30
+```
+
+```{r}
+(59 + 73 + 2) / 3
+```
+
+```{r}
+sin(pi / 2)
+```
+
+```{r}
+# object name gets value
+# <- Alt + - (the minus sign)
+x <- 3 * 4
+```
+
+```{r}
+primes <- c(2, 3, 5, 7, 11, 13)
+```
+
+```{r}
+primes * 2
+primes - 1
+```
+
+## **Comments**
+
+```{r}
+# create vector of primes
+primes <- c(2, 3, 5, 7, 11, 13)
+
+# multiply primes by 2
+primes * 2
+```
+
+```{r}
+x
+```
+
+```{r}
+this_is_a_really_long_name <- 2.5
+this_is_a_really_long_name
+```
+
+```{r}
+r_rocks <- 2^3
+```
+
+```{r}
+# r_rock
+# Error: object 'r_rock' not found
+```
+
+```{r}
+# R_rocks
+# Error: object 'R_rocks' not found
+```
+
+## Calling functions
+
+```{r}
+seq(from = 1, to = 10)
+```
+
+```{r}
+# omiting the names of the first several arguments in function calls
+seq(1, 10)
+```
+
+```{r}
+x <- "Hello, World!"
+```
+
+```{r}
+# x <- "hello
+```
+
+## Exercises
+
+```{r}
+# 1
+my_variable <- 10
+# my_varıable
+# Error: object 'my_varıable' not found
+my_variable
+```
+
+```{r}
+# 2
+library(tidyverse)
+
+ggplot(data = mpg, 
+       mapping = aes(x = displ,
+                     y = hwy)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+# 3
+# Option + Shift + K / Alt + Shift + K
+```
+
+Keyboard Shortcuts Help window pops up. It can be accessed using menu: Tools\>Keyboard Shortcuts Help.
+
+```{r}
+# 4
+my_bar_plot <- ggplot(mpg,
+                      aes(x = class)) +
+  geom_bar()
+
+my_bar_plot
+```
+
+```{r}
+my_scatter_plot <- ggplot(mpg,
+                          aes(x = cty,
+                              y = hwy)) +
+  geom_point()
+
+my_scatter_plot
+```
+
+```{r}
+ggsave(filename = "mpg-plot.png", plot = my_bar_plot)
+```

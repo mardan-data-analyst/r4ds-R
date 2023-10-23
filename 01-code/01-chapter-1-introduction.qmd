@@ -1,0 +1,26 @@
+---
+title: "Chapter 1 - Introduction"
+author: "Mardan Mirzaguliyev"
+format: html
+editor: visual
+date: 10/05/2023
+---
+
+# Introduction
+
+## The tidyverse
+
+```{r}
+# install.packages("tidyverse")
+```
+
+## Other packages
+
+```{r}
+# install.packages(
+#  c("arrow", "babynames", "curl", "duckdb", # "gapminder", 
+#     "ggrepel", "ggridges", "ggthemes", "hexbin", #"janitor", "Lahman", 
+#    "leaflet", "maps", "nycflights13", # "openxlsx", "palmerpenguins", 
+#    "repurrrsive", "tidymodels", "writexl")
+#  )
+```

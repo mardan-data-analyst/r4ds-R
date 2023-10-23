@@ -1,0 +1,278 @@
+---
+title: "Chapter 6 - Data tidying"
+author: "Mardan Mirzaguliyev"
+format: html
+editor: visual
+date: 10/10/2023
+---
+
+# Data tidying
+
+```{r message=FALSE}
+library(tidyverse)
+```
+
+## **Tidy data**
+
+```{r}
+who
+```
+
+```{r}
+# Compute rate per 10,000
+# table1 |>
+#   mutate(rate = cases / population * 10000)
+
+# Compute total cases per year
+# table1 |> 
+#   group_by(year) |> 
+#  summarize(total_cases = sum(cases))
+
+
+# Visualize changes over time
+# ggplot(table1, aes(x = year, y = cases)) +
+#  geom_line(aes(group = country), color = "grey50") +
+#  geom_point(aes(color = country, shape = country)) +
+#   scale_x_continuous(breaks = c(1999, 2000)) # x-axis breaks at 1999 and 2000
+```
+
+## Exercises
+
+```{r}
+# 1
+```
+
+1.  In table1 there are 4 columns:
+    1.  country - country that TB cases recorded for
+    2.  year - year cases recorded in
+    3.  cases - how many people infected
+    4.  population - population size of the country for that year
+    5.  Observations are the combinations of values in these columns
+2.  In table2 there are also 4 columns:
+    1.  country
+    2.  year
+    3.  type - it denotes type of the data for cases and total population size for the specific country in a specific year
+    4.  count - total count of cases and population size
+3.  In table3 there are 3 columns:
+    1.  country
+    2.  year
+    3.  rate - this is the result derived from cases against population size of a country
+
+## **Lengthening data**
+
+### **Data in column names**
+
+```{r}
+billboard
+```
+
+```{r}
+billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "ranks"
+  )
+```
+
+```{r}
+billboard |> 
+  pivot_longer(
+    cols = !c(artist, 
+              track, 
+              date.entered),
+    names_to = "week",
+    values_to = "rank"
+  )
+```
+
+```{r}
+billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  )
+```
+
+```{r}
+billboard_longer <- billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |> 
+  mutate(
+    week = parse_number(week)
+  )
+billboard_longer
+```
+
+```{r}
+billboard_longer |> 
+  ggplot(aes(x = week,
+             y = rank,
+             group = track)) +
+  geom_line(alpha = 0.25) +
+  scale_y_reverse()
+```
+
+### **How does pivoting work?**
+
+```{r}
+df <- tribble(
+  ~id, ~bp1, ~bp2,
+  "A", 100, 120,
+  "B", 140, 115,
+  "C", 120, 125
+)
+```
+
+```{r}
+df |> 
+  pivot_longer(
+    cols = bp1:bp2,
+    names_to = "measurement",
+    values_to = "value"
+  )
+```
+
+### **Many variables in column names**
+
+```{r}
+who2
+```
+
+```{r}
+who2 |> 
+  pivot_longer(
+    cols = !(country:year),
+    names_to = c("diagnosis", 
+                 "gender", "age"),
+    names_sep = "_",
+    values_to = "count"
+  )
+```
+
+### **Data and variable names in the column headers**
+
+```{r}
+household
+```
+
+```{r}
+household |> 
+  pivot_longer(
+    cols = !family,
+    names_to = c(".value", "child"),
+    names_sep = "_",
+    values_drop_na = TRUE
+  )
+```
+
+## **Widening data**
+
+```{r}
+cms_patient_experience
+```
+
+```{r}
+# the complete set of values for measure_cd and measure_title
+
+cms_patient_experience |> 
+  distinct(measure_cd, measure_title)
+```
+
+```{r}
+cms_patient_experience |> 
+  pivot_wider(
+    names_from = measure_cd,
+    values_from = prf_rate
+  )
+```
+
+```{r}
+cms_patient_experience |> 
+  pivot_wider(
+    id_cols = starts_with("org"),
+    names_from = measure_cd,
+    values_from = prf_rate
+  )
+```
+
+### **How does `pivot_wider()` work?**
+
+```{r}
+df <- tribble(
+  ~id, ~measurement, ~value,
+  "A", "bp1", 100,
+  "B", "bp1", 140,
+  "B", "bp2", 115,
+  "A", "bp2", 120,
+  "A", "bp3", 105
+)
+```
+
+```{r}
+# The new column names will be the unique values of measurement
+df |> 
+  pivot_wider(
+    names_from = measurement,
+    values_from = value
+  )
+```
+
+```{r}
+# The new column names will be the unique values of measurement
+df |> 
+  distinct(measurement) |> 
+  pull()
+```
+
+```{r}
+# By default, the rows in the output are determined by all the variables that aren’t going into the new names or values
+# These are called the id_cols.
+# Here there is only one column, but in general there can be any number.
+df |> 
+  select(-measurement, -value) |> 
+  distinct()
+```
+
+```{r}
+# pivot_wider() then combines these results to generate an empty data frame
+df |> 
+  select(-measurement, -value) |> 
+  distinct() |> 
+  mutate(x = NA, y = NA, z = NA)
+```
+
+```{r}
+# multiple rows in the input that correspond to one cell in the output
+df <- tribble(
+  ~id, ~measurement, ~value,
+  "A", "bp1", 100,
+  "A", "bp1", 102,
+  "A", "bp2", 120,
+  "B", "bp1", 140,
+  "B", "bp2", 115
+  )
+```
+
+```{r}
+# If we attempt to pivot this we get an output that contains list-columns
+df |> 
+  pivot_wider(
+    names_from = measurement,
+    values_from = value
+  )
+```
+
+```{r}
+df |> 
+  group_by(id, measurement) |>
+  summarise(n = n(), 
+            .groups = "drop") |> 
+  filter(n > 1)
+```
